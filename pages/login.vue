@@ -51,8 +51,10 @@
 <script setup>
 import { ref , onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-
-const {setToken} = useAuth()
+const {setToken,getToken} = useAuth()
+if(getToken()){
+  navigateTo('/')
+}
 const mobile = ref('')
 const password = ref('')
 const visible = ref(false)
