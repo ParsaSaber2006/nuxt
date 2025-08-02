@@ -8,10 +8,10 @@ export default defineNuxtConfig({
     'vuetify-nuxt-module'
     ],
     css: [
-      '@/assets/scss/_variables.scss',
-      '@/assets/scss/app.scss',
-      '@/assets/scss/fonts.scss',
-      '@/assets/scss/vuetify.scss'
+      '~/assets/scss/_variables.scss',
+      '~/assets/scss/app.scss',
+      '~/assets/scss/fonts.scss',
+      '~/assets/scss/vuetify.scss'
     ],
     vite: {
     optimizeDeps: {
