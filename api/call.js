@@ -30,16 +30,6 @@ export function createCall(data) {
   });
 }
 
-// export function updateCall(id, data) {
-//   const {getToken} = useAuthToken()
-//   return axios.post(`${API_BASE_OPERATE}/${id}/update`, data, {
-//     headers: {
-//       Authorization: `Bearer ${getToken()}`,
-//     },
-//   }).catch((error) => {
-//     throw error;
-//   });
-// }
 
 export function detailsCall(id) {
   const {getToken} = useAuthToken()
@@ -63,13 +53,3 @@ export function downloadCall( data) {
     throw error;
   });
 }
-// export function deleteCall(id) {
-//   const {getToken} = useAuthToken()
-//   return axios.post(`${API_BASE_OPERATE}/${id}/delete`, {}, {
-//     headers: {
-//       Authorization: `Bearer ${getToken()}`,
-//     },
-//   }).catch((error) => {
-//     throw error;
-//   });
-// }

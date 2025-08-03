@@ -9,7 +9,6 @@ export const useAuthStore = defineStore('auth', {
     intended_url: null,
     loginFormDisplay: false,
   }),
-
   persist: true, // برای اینکه بعد از refresh توکن بمونه
  getters: {
     isAdmin: (state) => {
@@ -26,10 +25,12 @@ export const useAuthStore = defineStore('auth', {
   
   actions: {
     async login(credentials) {
+      const {setToken} = useAuthToken()
       try {
-        const res = await axios.post('/api/login', credentials);
+        const res = await axios.post('http://127.0.0.1:8000/api/login', credentials);
         this.token = res.data.token;
         this.user = res.data.user;
+        setToken(res.data.token);
         console.log("s")
         
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
@@ -39,13 +40,16 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async logout() {
+      const {removeToken} = useAuthToken()
       this.token = null;
       this.user = null;
       try {
-        const res = await axios.post('/api/logout');
+        const res = await axios.post('http://127.0.0.1:8000/api/logout');
         this.user = null,
         this.token = null;
       delete axios.defaults.headers.common['Authorization'];
+      removeToken()
+      navigateTo('/login')
       }catch(err){
         return err;
       }

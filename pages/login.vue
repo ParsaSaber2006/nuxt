@@ -6,9 +6,9 @@
       max-width="448"
       rounded="lg"
     >
-    <v-form @submit.prevent="submit">
+    <v-form @submit.prevent="handleLogin">
       <v-text-field 
-      v-model="mobile"
+      v-model="form.mobile_number"
       label="شماره همراه" 
       required
        density="compact"
@@ -16,7 +16,7 @@
         variant="outlined"
       ></v-text-field>
       <v-text-field 
-      v-model="password"
+      v-model="form.password"
       label="رمز عبور" 
       required
       :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
@@ -49,33 +49,31 @@
 </template>
 
 <script setup>
-const {getToken} = useAuthToken()
-if(getToken()){
-    navigateTo('/')
-}
-const visible = ref(false)
-const mobile = ref('')
-const password = ref('')
+import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+
+
+  const visible = ref(false)
+
+const auth = useAuthStore();
+const router = useRouter();
+
+const form = ref({
+  mobile_number: '',
+  password: '',
+});
+
 const loading = ref(false);
 const error = ref(null);
-const {setToken} = useAuthToken()
-async function submit() {
+
+async function handleLogin() {
   loading.value = true;
   error.value = null;
 
   try {
-    const result = await $fetch('http://127.0.0.1:8000/api/login',{
-        method:'POST',
-        body:{
-            mobile_number: mobile.value,
-            password: password.value
-        }
-    });
-    mobile.value = ''
-    password.value = ''
-    setToken(result.token)
-    alert("Logged in")
-    navigateTo('/')
+    await auth.login(form.value);
+    navigateTo('/users');
   } catch (err) {
     error.value = err.message;
   } finally {

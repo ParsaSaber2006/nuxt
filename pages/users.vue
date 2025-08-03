@@ -128,10 +128,6 @@
 </template>
 
 <script setup>
-const {getToken} = useAuthToken()
-if(!getToken()){
-  navigateTo('/login')
-}
 import { computed, onMounted ,ref} from 'vue';
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
@@ -145,7 +141,10 @@ const toast = useToast();
 const itemsPerPage =ref(10)
 const store = useUserStore();
 const storeAuth = useAuthStore();
-
+const {getToken} = useAuthToken()
+if(!getToken()){
+  navigateTo('/login')
+}
 const isAdmin = computed(() => storeAuth.isAdmin);
 const router = useRouter();
 
@@ -244,7 +243,7 @@ onMounted(async () => {
   console.log(users);
 });
 function goToCreateUser() {
-  router.push({ name: 'UserCreate'});
+  router.push('UserCreate');
 }
 
 const loadUsers = () => {
@@ -267,6 +266,7 @@ const loadUsers = () => {
 console.log(params,"das",options.value)
   store.loadUsers(params).then((response) => {
   totalItems.value = response.data.meta.total;
+  console.log(totalItems)
   });
    }catch(err){
 

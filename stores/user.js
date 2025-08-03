@@ -41,6 +41,8 @@ getters: {
 actions: {
 async loadUsers(options) {
   this.loading = true;
+
+  console.log(options,"oo")
   try {
     const params = {
       per_page: options?.per_page ?? 10,
@@ -57,7 +59,7 @@ async loadUsers(options) {
     };
     console.log("ارسال به fetchUsers:", params);
     const res = await fetchUsers(params);
-    
+    console.log(res,"sdds")
     this.users = res.data.data;
     this.totalItems = res.data.meta.total || 0;
     return res;
