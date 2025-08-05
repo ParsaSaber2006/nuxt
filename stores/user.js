@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+// import axios from 'axios';
 import { fetchUsers, createUser,detailsUser,updateUser,deleteUser,fetchGuestUsers, getProvince,getCity } from '@/api/user';
 
 
@@ -60,7 +60,7 @@ async loadUsers(options) {
     console.log("ارسال به fetchUsers:", params);
     const res = await fetchUsers(params);
     console.log(res,"sdds")
-    this.users = res.data.data;
+    this.users = res.data;
     this.totalItems = res.data.meta.total || 0;
     return res;
   } catch (err) {
@@ -121,9 +121,10 @@ async loadGuestUsers(options) {
    
 
     async initFilterOptions() {
-  const res = await axios.get('http://127.0.0.1:8000/api/users/filters');
-  
-  this.allCities = res.data.cities;
+  // const res = await axios.get('http://127.0.0.1:8000/api/users/filters');
+  const res = await $fetch('http://127.0.0.1:8000/api/users/filters')
+
+  this.allCities = res.cities;
   this.allJobs = res.data.jobs;
 },
 

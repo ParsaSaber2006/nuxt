@@ -74,7 +74,7 @@
 
 <script setup>
 import { ref, watch, defineProps, defineEmits } from 'vue';
-import axios from 'axios';
+// import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
 import { useToast } from 'vue-toastification';
 
@@ -112,62 +112,65 @@ function translateErrorMessage(message) {
 }
 
 const fetchAndSaveCsv = async () => {
-  loading.value = true
-  error.value = null
-  progress.value = 0
+loading.value = true
+error.value = null
+progress.value = 0
 
-  try {
-    const response = await axios.get('http://127.0.0.1:8000/api/simotel/users/sync', {
-      headers: {
-        Authorization: `Bearer ${storeAuth.token}`,
-      }
-    })
+try {
+  const response = await $fetch('http://127.0.0.1:8000/api/simotel/users/sync', {
+    headers: {
+      Authorization: `Bearer ${storeAuth.token}`,
+    },
+  })
 
-    // فرض بر اینه که خروجی شامل record_count باشه
-    fetchedCount.value = response.data.count_record || 0
+  fetchedCount.value = response.count_record || 0
 
-    toast.success(`دریافت و ذخیره CSV با موفقیت انجام شد (${fetchedCount.value} رکورد)`)
-    step.value = 'sync'
+  toast.success(`دریافت و ذخیره CSV با موفقیت انجام شد (${fetchedCount.value} رکورد)`)
+  step.value = 'sync'
 
-  } catch (err) {
-    toast.error('خطا در دریافت یا ذخیره CSV: ' + err.message)
-    console.error(err)
-  } finally {
-    loading.value = false
-  }
+} catch (err) {
+  toast.error('خطا در دریافت یا ذخیره CSV: ' + err.message)
+  console.error(err)
+} finally {
+  loading.value = false
+}
+
 }
 
 const startSync = async () => {
   loading.value = true
-  error.value = null
-  progress.value = 0
+error.value = null
+progress.value = 0
 
-  try {
-    const response = await axios.post('http://127.0.0.1:8000/api/simotel/bulk/sync', null, {
-      headers: {
-        Authorization: `Bearer ${storeAuth.token}`,
-      }
-    })
+try {
+  const response = await $fetch('http://127.0.0.1:8000/api/simotel/bulk/sync', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${storeAuth.token}`,
+    },
+    body: null,
+  })
 
-    const { success_count, failed_items } = response.data
+  const { success_count, failed_items } = response
 
-    successCount.value = success_count
-    failedItems.value = failed_items.map(item => ({
-      ...item,
-      error: translateErrorMessage(item.error),
-    }))
+  successCount.value = success_count
+  failedItems.value = failed_items.map(item => ({
+    ...item,
+    error: translateErrorMessage(item.error),
+  }))
 
-    if (failedItems.value.length > 0) {
-      toast.error(`${failedItems.value.length} مورد ناموفق!`)
-    } else {
-      toast.success('همگام‌سازی با موفقیت انجام شد')
-    }
-
-  } catch (err) {
-    toast.error('خطا در همگام‌سازی: ' + err.message)
-    console.error(err)
-  } finally {
-    loading.value = false
+  if (failedItems.value.length > 0) {
+    toast.error(`${failedItems.value.length} مورد ناموفق!`)
+  } else {
+    toast.success('همگام‌سازی با موفقیت انجام شد')
   }
+
+} catch (err) {
+  toast.error('خطا در همگام‌سازی: ' + err.message)
+  console.error(err)
+} finally {
+  loading.value = false
+}
+
 }
 </script>

@@ -185,7 +185,7 @@ const {
        storeAuth.logout();
       router.push("/login");
     }
-    users.value = response.data.data;
+    users.value = response.data;
     totalItems.value = response.data.meta.total || 0;
   } catch (error) {
 

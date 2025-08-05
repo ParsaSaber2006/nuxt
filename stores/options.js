@@ -1,4 +1,4 @@
-import axios from 'axios'
+// import axios from 'axios'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue';
 
@@ -15,12 +15,15 @@ export const useOptionsStore = defineStore('options', () => {
 
     //actions
     async function getOptionsFromServer() {
-        const { data } = await axios.get("http://127.0.0.1:8000/api/options")
+        const data = await $fetch("http://127.0.0.1:8000/api/options")
         storedOptions.value = data
     }
 
     async function update(options) {
-        await axios.put("http://127.0.0.1:8000/api/options", options);
+await $fetch("http://127.0.0.1:8000/api/options", {
+  method: 'PUT',
+  body: options,
+})
         resetStoreOptions();
 
     }
@@ -28,7 +31,7 @@ export const useOptionsStore = defineStore('options', () => {
     async function resetStoreOptions() {
         storedOptions.value = JSON.parse(JSON.stringify(options))
     }
-    
+
     function get(key, def) {
         return options.value[key] ?? def;
     }

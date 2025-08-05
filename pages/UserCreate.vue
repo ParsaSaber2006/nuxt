@@ -460,7 +460,7 @@ onMounted(async () => {
    loading.value = false;
    try {
   const response = await store.getProvinces(); 
-  provinces.value = response.data;
+  provinces.value = response;
 } catch (err) {
   console.error('خطا در دریافت لیست استان‌ها:', err);
 }
@@ -479,7 +479,7 @@ const onProvinceChange = async (provinceId, resetCity = true) => {
   try {
     const modifiedProvinceId = provinceId.replace(/\s+/g, '-');
     const response = await store.getCitiesByProvince(modifiedProvinceId);
-    cities.value = response.data;
+    cities.value = response;
 
     // بررسی کن که city در لیست جدید وجود دارد یا نه
     if (!cities.value.find(c => c.name === form.city)) {

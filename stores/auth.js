@@ -1,6 +1,6 @@
 // stores/auth.js
 import { defineStore } from 'pinia';
-import axios from 'axios';
+// import axios from 'axios';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -25,35 +25,42 @@ export const useAuthStore = defineStore('auth', {
   
   actions: {
     async login(credentials) {
-      const {setToken} = useAuthToken()
-      try {
-        const res = await axios.post('http://127.0.0.1:8000/api/login', credentials);
-        this.token = res.data.token;
-        this.user = res.data.user;
-        setToken(res.data.token);
-        console.log("s")
-        
-        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
-      } catch (err) {
-        throw new Error(err.response?.data?.message || 'خطا در ورود');
-      }
+const { setToken } = useAuthToken()
+
+try {
+  const res = await $fetch('http://127.0.0.1:8000/api/login', {
+    method: 'POST',
+    body: credentials,
+  })
+  this.token = res.token
+  this.user = res.user
+  setToken(res.token)
+  console.log("s")
+
+  // برای تنظیم هدر پیش‌فرض در $fetch نیازی به این خط نیست
+} catch (err) {
+  throw new Error(err.data?.message || 'خطا در ورود')
+}
+
     },
 
     async logout() {
-      const {removeToken} = useAuthToken()
-      this.token = null;
-      this.user = null;
-      try {
-        const res = await axios.post('http://127.0.0.1:8000/api/logout');
-        this.user = null,
-        this.token = null;
-      delete axios.defaults.headers.common['Authorization'];
-      removeToken()
-      navigateTo('/login')
-      }catch(err){
-        return err;
-      }
-    },
+ const { removeToken } = useAuthToken()
+this.token = null
+this.user = null
+
+try {
+  const res = await $fetch('http://127.0.0.1:8000/api/logout', {
+    method: 'POST',
+  })
+  this.user = null
+  this.token = null
+  removeToken()
+  navigateTo('/login')
+} catch (err) {
+  return err
+}
+   },
 
       setIntendedUrl(url) {
     this.intended_url = url;

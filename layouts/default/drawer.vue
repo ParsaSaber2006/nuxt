@@ -153,25 +153,25 @@ onMounted(() => {
 });
 
 async function handleXml(){
-
 try {
-  const response = await axios.post('http://127.0.0.1:8000/api/user/contacts/xml', {}, {
+  const response = await $fetch('http://127.0.0.1:8000/api/user/contacts/xml', {
+    method: 'POST',
     headers: {
       Authorization: `Bearer ${auth.token}`,
     },
-    responseType: 'blob', // نوع پاسخ را به blob تغییر دهید
-  });
+    responseType: 'blob',
+    body: {},
+  })
 
-  // ایجاد لینک دانلود
-  const url = window.URL.createObjectURL(new Blob([response.data]));
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', 'contacts.xml'); // نام فایل دانلودی
-  document.body.appendChild(link);
-  link.click(); // کلیک روی لینک برای دانلود
-  link.remove(); // حذف لینک از DOM
+  const url = window.URL.createObjectURL(new Blob([response]))
+  const link = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', 'contacts.xml')
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
 } catch (error) {
-  console.log(error);
+  console.log(error)
 }
 }
 
